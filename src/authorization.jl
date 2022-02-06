@@ -2,28 +2,37 @@
 Authorization code flow with PKCE for Spotify API. Process outlined here: 
 https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
 
+WARNING: Due to currently poor implementation of the function server_listen(),
+this may hang indefinitely. I would rather not deal with the user just closing
+the page right now.
+
 # Parameters 
 
-    client_id::String
-        Client ID for the Spotify API application 
+## client_id::String
+Client ID for the Spotify API application 
 
-    redirect_uri::String
-        Redirect URI for application 
 
-    scope::String
-        API scope for the application
+## redirect_uri::String
+Redirect URI for application 
 
-    code_challenge::String
-        Code challenge for PKCE. Generate using generate_verifier()
 
-    show_dialog::Bool, optional
-        Whether or not to show the authorization dialog even if already 
-        authorized. Default is False.
+## scope::String
+API scope for the application
+
+
+## code_challenge::String
+Code challenge for PKCE. Generate using generate_verifier()
+
+
+## show_dialog::Bool, optional
+Whether or not to show the authorization dialog even if already 
+authorized. Default is False.
+
 
 # Returns 
 
-    response::Dict
-        Response from the Spotify API
+## authCode::Union{Dict, Nothing}
+Authorization code and state if successful, Nothing if not.
 
 """
 function authorization_code(client_id::String, redirect_uri::String, scope::String, code_challenge::String; show_dialog::Bool=false) 
@@ -58,8 +67,15 @@ function authorization_code(client_id::String, redirect_uri::String, scope::Stri
     if response.headers[3].first == "location" # superficial check for location 
         DefaultApplication.open(response.headers[3].second) # open in default application for user authorization
 
+        authCodeRaw = server_listen() # wait for user to authorize
+
+        return queryparams(URI(authCodeRaw.target)) # return auth code
+
     else 
         println("Couldn't find url") # error message MAKE BETTER LATER
+
+        return nothing 
+
     end # if 
 
     ### end of comparatively bad code ###
@@ -72,11 +88,11 @@ follows code found here: https://docs.cotter.app/sdk-reference/api-for-other-mob
 
 # Returns
 
-    code_verifier::String 
-        url-safe base64 encoded code verifier 
+## code_verifier::String 
+url-safe base64 encoded code verifier 
 
-    code_challenge::String 
-        sha256 hash of code verifier
+## code_challenge::String 
+sha256 hash of code verifier
 
 """
 function generate_verifier()
@@ -93,28 +109,41 @@ function generate_verifier()
 end # function generate_verifier
 
 """
-Set up HTTP.listen to grab spotify authorization code
+Set up HTTP.listen to grab spotify authorization code. Will listen until 
+code is received. Will *probably* just hang if something goes wrong. Be 
+careful. 
+
+# Parameters
+
+## port::Int, optional
+Default: 8888. Port to listen on.
+
+# Returns
+
+## authorizationCode::HTTP.Messages.Request
+Authorization code from Spotify, not fully parsed yet. Full result of
+get.
 
 """
-function set_up_server_listen(port::Int=8888)
+function server_listen(port::Int=8888)
     server = listen(port) # listen on sepcified local port
 
-    ### THIS DOESN'T WORK... OR AT LEAST I JUST COPIED SOMETHING AND DON'T KNOW WHAT IT DOES ### 
+    authorizationCode = nothing # empty variable for authorization code
 
     @async HTTP.listen("127.0.0.1", port; server=server) do http
-        @show http.message
-        @show HTTP.header(http, "Content-Type")
-        while !eof(http)
-            println("body data: ", String(readavailable(http)))
-        end
-        HTTP.setstatus(http, 404)
-        HTTP.setheader(http, "Foo-Header" => "bar")
+        @show http.message # show result of request
+        authorizationCode = http.message # save authorization code
         startwrite(http)
-        write(http, "response body")
-        write(http, "more response body")
+        write(http, "You can close this page now") # confirmation to user that they can close the page
+        
     end # HTTP.listen
 
-    sleep(10)
-    close(server)
+    while authorizationCode === nothing # wait for authorization code to be set
+        sleep(0.1) # wait for authorization code to be set
+    end # while
+
+    close(server) # close server
+
+    authorizationCode
 
 end # function set_up_server_listen
