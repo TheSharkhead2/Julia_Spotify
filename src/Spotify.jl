@@ -1,7 +1,8 @@
 
 module Spotify
 
-using HTTP, Random, Base64, SHA, URIs
+import DefaultApplication
+using HTTP, Random, Base64, SHA, URIs, Sockets
 
 include("authorization.jl") 
 

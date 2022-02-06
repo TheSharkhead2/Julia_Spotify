@@ -33,7 +33,7 @@ function authorization_code(client_id::String, redirect_uri::String, scope::Stri
         show_dialog_string = "true"
     else 
         show_dialog_string = "false"
-    end
+    end # if
 
     state = randstring(16) # random string for state
 
@@ -49,20 +49,20 @@ function authorization_code(client_id::String, redirect_uri::String, scope::Stri
         "code_challenge_method" => "S256",
     )
 
+    ### start of bad code, not sure if there is a different way of doing this but this works ###
+
     uri = URI(URI("https://accounts.spotify.com/authorize?"); query=parameters) # define request URI
 
-    # HTTP.get(string(uri); redirect=true, status_exception=false) # send request
+    response = HTTP.get(string(uri); redirect=true, status_exception=false) # send request
 
-    # Try opening a browser window based on OS type
-    if Sys.isapple()
-        run(`open $uri`)
-    end
-    if Sys.iswindows()
-        run(`explorer $uri`)
-    end
-    if Sys.islinux()
-        run(`xdg-open $uri`)
-    end
+    if response.headers[3].first == "location" # superficial check for location 
+        DefaultApplication.open(response.headers[3].second) # open in default application for user authorization
+
+    else 
+        println("Couldn't find url") # error message MAKE BETTER LATER
+    end # if 
+
+    ### end of comparatively bad code ###
 
 end # function authorize
 
@@ -91,3 +91,30 @@ function generate_verifier()
     (code_verifier, code_challenge)
 
 end # function generate_verifier
+
+"""
+Set up HTTP.listen to grab spotify authorization code
+
+"""
+function set_up_server_listen(port::Int=8888)
+    server = listen(port) # listen on sepcified local port
+
+    ### THIS DOESN'T WORK... OR AT LEAST I JUST COPIED SOMETHING AND DON'T KNOW WHAT IT DOES ### 
+
+    @async HTTP.listen("127.0.0.1", port; server=server) do http
+        @show http.message
+        @show HTTP.header(http, "Content-Type")
+        while !eof(http)
+            println("body data: ", String(readavailable(http)))
+        end
+        HTTP.setstatus(http, 404)
+        HTTP.setheader(http, "Foo-Header" => "bar")
+        startwrite(http)
+        write(http, "response body")
+        write(http, "more response body")
+    end # HTTP.listen
+
+    sleep(10)
+    close(server)
+
+end # function set_up_server_listen
