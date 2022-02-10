@@ -9,6 +9,6 @@ include("authorization.jl")
 
 export SpotifyDetails
 
-export pkce_authorization
+export pkce_authorization, refresh_access_token!
 
 end # Spotify

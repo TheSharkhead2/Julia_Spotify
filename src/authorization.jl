@@ -247,3 +247,33 @@ function pkce_authorization(client_id::String, redirect_uri::String, scope::Stri
     end # if 
 
 end # function pkce_authorization
+
+"""
+Function to get new access token from refresh token (for PKCE extension).
+
+"""
+function refresh_access_token!(spotifyDetails::SpotifyDetails)
+    # define request parameters
+    parameters = Dict(
+        "grant_type" => "refresh_token",
+        "refresh_token" => spotifyDetails.refresh_token,
+        "client_id" => spotifyDetails.client_id,
+    )
+
+    uri = URI(URI("https://accounts.spotify.com/api/token"); query=parameters)
+
+    # define required headers 
+    headers = Dict(
+        "Content-Type" => "application/x-www-form-urlencoded",
+    )
+
+    # send request
+    response = HTTP.post(string(uri), headers)
+
+    responseParsed = JSON.parse(String(response.body)) # return parsed response
+
+    spotifyDetails.access_token = responseParsed["access_token"] # save access token
+    spotifyDetails.refresh_token = responseParsed["refresh_token"]
+    spotifyDetails.expires_at = responseParsed["expires_in"] + Int(floor(time())) # save expiration time as current time plus expires in time
+
+end # function refresh_access_token
