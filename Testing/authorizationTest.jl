@@ -6,8 +6,18 @@ using DotEnv
 
 DotEnv.config()
 
-code_verifier_challenge = generate_verifier() # generate code verifier and challenge
+const redirect_uri = "http://localhost:8888/callback"
+const scope = "user-read-private user-read-email"
 
-response = authorization_code(ENV["CLIENT_ID"], "http://localhost:8888/callback", "user-read-private user-read-email", code_verifier_challenge[2]; show_dialog=true)
+const code_verifier_challenge = generate_verifier() # generate code verifier and challenge
 
-println(response)
+spDetails = SpotifyDetails(ENV["CLIENT_ID"], redirect_uri, scope, nothing, nothing, nothing, code_verifier_challenge)
+
+response = authorization_code(spDetails; show_dialog=true)
+
+if haskey(response, "code") # check to see if got code not error 
+    println(get_access_token(response["code"], spDetails))
+
+else
+    println("error")
+end # if

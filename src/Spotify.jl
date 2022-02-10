@@ -2,10 +2,13 @@
 module Spotify
 
 import DefaultApplication
+import JSON
 using HTTP, Random, Base64, SHA, URIs, Sockets
 
 include("authorization.jl") 
 
-export authorization_code, generate_verifier
+export SpotifyDetails
+
+export authorization_code, generate_verifier, get_access_token
 
 end # Spotify

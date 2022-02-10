@@ -1,3 +1,18 @@
+"""
+Object for holding Spotify application details using in PKCE authentication 
+implementation.
+
+"""
+mutable struct SpotifyDetails
+    client_id::String
+    redirect_uri::String
+    scope::String
+    access_token::Union{String, Nothing}
+    refresh_code::Union{String, Nothing}
+    expires_at::Union{Int, Nothing}
+    code_verifierChallenge::Tuple{String, String}
+end # SpotifyDetails
+
 """ 
 Authorization code flow with PKCE for Spotify API. Process outlined here: 
 https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
@@ -8,25 +23,8 @@ the page right now.
 
 # Parameters 
 
-## client_id::String
-Client ID for the Spotify API application 
-
-
-## redirect_uri::String
-Redirect URI for application 
-
-
-## scope::String
-API scope for the application
-
-
-## code_challenge::String
-Code challenge for PKCE. Generate using generate_verifier()
-
-
-## show_dialog::Bool, optional
-Whether or not to show the authorization dialog even if already 
-authorized. Default is False.
+## spotifyDetails::SpotifyDetails
+SpotifyDetails object with client_id, redirect_uri, scope, and code_challenge
 
 
 # Returns 
@@ -35,7 +33,7 @@ authorized. Default is False.
 Authorization code and state if successful, Nothing if not.
 
 """
-function authorization_code(client_id::String, redirect_uri::String, scope::String, code_challenge::String; show_dialog::Bool=false) 
+function authorization_code(spotifyDetails::SpotifyDetails; show_dialog::Bool=false) 
 
     # convert bool for show_dialog to string
     if show_dialog
@@ -49,12 +47,12 @@ function authorization_code(client_id::String, redirect_uri::String, scope::Stri
     # define authorization request
     parameters = Dict(
         "response_type" => "code",
-        "client_id" => client_id,
-        "redirect_uri" => redirect_uri,
-        "scope" => scope,
+        "client_id" => spotifyDetails.client_id,
+        "redirect_uri" => spotifyDetails.redirect_uri,
+        "scope" => spotifyDetails.scope,
         "show_dialog" => show_dialog_string,
         "state" => state,
-        "code_challenge" => code_challenge,
+        "code_challenge" => spotifyDetails.code_verifierChallenge[2],
         "code_challenge_method" => "S256",
     )
 
@@ -100,9 +98,11 @@ function generate_verifier()
 
     randomKeyB64 = base64encode(randomKey) # base64 encode random key, uses OS-randomness: https://www.reddit.com/r/Julia/comments/cdij9t/is_there_a_julia_equivalent_for_pythons_osurandom/
 
-    code_verifier = replace(replace(randomKeyB64, "+"=>"-"), "/"=>"_") # replace non-url-safe characters (+ and /) with url-safe equivalents (- and _), there seems to be no other solution in Julia currently: # generate cryptographically-random key 
+    code_verifier = replace(replace(randomKeyB64, "+"=>"-"), "/"=>"_")[1:43] # replace non-url-safe characters (+ and /) with url-safe equivalents (- and _), there seems to be no other solution in Julia currently: # generate cryptographically-random key 
 
-    code_challenge = bytes2hex(sha256(code_verifier)) # sha256 hash of code verifier
+    code_challengeHash = sha256(code_verifier) # sha256 hash of code verifier
+
+    code_challenge = replace(replace(replace(base64encode(code_challengeHash), "+"=>"-"), "/"=>"_"), "="=> "") # replace non-url-safe characters and last equal sign
 
     (code_verifier, code_challenge)
 
@@ -132,7 +132,9 @@ function server_listen(port::Int=8888)
 
     @async HTTP.listen("127.0.0.1", port; server=server) do http
         @show http.message # show result of request
-        authorizationCode = http.message # save authorization code
+        if authorizationCode === nothing # only save authorization code if it isn't writing over something else
+            authorizationCode = http.message # save authorization code
+        end # if
         startwrite(http)
         write(http, "You can close this page now") # confirmation to user that they can close the page
         
@@ -147,3 +149,47 @@ function server_listen(port::Int=8888)
     authorizationCode
 
 end # function set_up_server_listen
+
+"""
+Function to get API access token from authorization code using the PKCE method
+
+# Parameters
+
+## authorizationCode::String
+Authorization code returned from authorization user method (function: 
+authorization_code())
+
+## spotifyDetails::SpotifyDetails
+SpotifyDetails object. Must have: client_id, redirect_uri, code_verifier
+
+# Returns
+
+## response::Dict{String, Any}
+Dict with access_token, refresh_token, expires_at, and other 
+unimportant/redundant information
+
+"""
+function get_access_token(authorization_code::String, spotifyDetails::SpotifyDetails)
+    # define request parameters
+    parameters = Dict(
+        "grant_type" => "authorization_code",
+        "code" => authorization_code,
+        "redirect_uri" => spotifyDetails.redirect_uri,
+        "client_id" => spotifyDetails.client_id,
+        "code_verifier" => spotifyDetails.code_verifierChallenge[1],
+    )
+
+    # define request URI
+    uri = URI(URI("https://accounts.spotify.com/api/token"); query=parameters)
+
+    # define request headers
+    headers = Dict(
+        "Content-Type" => "application/x-www-form-urlencoded",
+    )
+
+    # send request
+    response = HTTP.post(string(uri), headers)
+
+    JSON.parse(String(response.body)) # return parsed response
+
+end # function get_access_token
