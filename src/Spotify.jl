@@ -9,6 +9,6 @@ include("authorization.jl")
 
 export SpotifyDetails
 
-export authorization_code, generate_verifier, get_access_token
+export pkce_authorization
 
 end # Spotify

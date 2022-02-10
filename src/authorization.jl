@@ -8,7 +8,7 @@ mutable struct SpotifyDetails
     redirect_uri::String
     scope::String
     access_token::Union{String, Nothing}
-    refresh_code::Union{String, Nothing}
+    refresh_token::Union{String, Nothing}
     expires_at::Union{Int, Nothing}
     code_verifierChallenge::Tuple{String, String}
 end # SpotifyDetails
@@ -193,3 +193,57 @@ function get_access_token(authorization_code::String, spotifyDetails::SpotifyDet
     JSON.parse(String(response.body)) # return parsed response
 
 end # function get_access_token
+
+
+"""
+PKCE authorization method for Spotify API.
+
+# Parameters
+
+## client_id::String
+Client ID for Spotify API
+
+## redirect_uri::String
+Redirect URI
+
+## scope::String
+Scope for Spotify API
+
+## show_dialog::Bool
+Boolean for whether to show dialog to user even if authenticated
+
+# Returns
+
+## spotifyDetails::SpotifyDetails
+A full SpotifyDetails object containing: client_id, redirect_uri, scope, 
+access_token, refresh_toke, expires_at, code verifier/challenge.
+
+"""
+function pkce_authorization(client_id::String, redirect_uri::String, scope::String; show_dialog::Bool=true)
+    code_verifierChallenge = generate_verifier() # generate code verifier and code challenge
+
+    spotifyDetails = SpotifyDetails(client_id, redirect_uri, scope, nothing, nothing, nothing, code_verifierChallenge) # create SpotifyDetails object
+
+    authorization_code_response = authorization_code(spotifyDetails; show_dialog=show_dialog) # get authorization code
+
+    if haskey(authorization_code_response, "code")
+        access_token_response = get_access_token(authorization_code_response["code"], spotifyDetails) # get access token
+
+        if haskey(access_token_response, "access_token") && haskey(access_token_response, "refresh_token") && haskey(access_token_response, "expires_in")
+            spotifyDetails.access_token = access_token_response["access_token"] # save access token
+            spotifyDetails.refresh_token = access_token_response["refresh_token"] # save refresh token
+            spotifyDetails.expires_at = access_token_response["expires_in"] + Int(floor(time())) # save expiration time as current time plus expires in time
+            
+            return spotifyDetails
+
+        else
+            throw(DomainError(access_token_response, "Couldn't get access token from Spotify")) # error message
+            return nothing
+        end # if
+
+    else 
+        throw(DomainError(authorization_code_response, "Error getting authorization code")) # throw error if authorization code is not returned
+        return nothing
+    end # if 
+
+end # function pkce_authorization
