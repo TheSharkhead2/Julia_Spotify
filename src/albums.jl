@@ -41,3 +41,14 @@ function get_multiple_albums(spotifyDetails::SpotifyDetails, album_ids::Vector{S
     spotify_request(spotifyDetails, urlextention) # make request
 
 end # function get_multiple_albums
+
+"""
+Get tracks for a specific album: https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-albums-tracks
+
+"""
+function get_album_tracks(spotifyDetails::SpotifyDetails, album_id::String; limit::Int=50, market::String="US", offset::Int=0)
+    urlextention = "albums/$(album_id)/tracks?limit=$(limit)&offset=$(offset)&market=$(market)" # get album tracks extension 
+
+    spotify_request(spotifyDetails, urlextention) # make request
+
+end # function get_album_tracks

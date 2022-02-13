@@ -17,6 +17,6 @@ export spotify_request
 
 include("albums.jl")
 
-export get_album, get_multiple_albums
+export get_album, get_multiple_albums, get_album_tracks
 
 end # Spotify
