@@ -15,4 +15,8 @@ export pkce_authorization, refresh_access_token!
 
 export spotify_request
 
+include("albums.jl")
+
+export get_album, get_multiple_albums
+
 end # Spotify
