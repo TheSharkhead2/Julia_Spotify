@@ -52,3 +52,31 @@ function get_album_tracks(spotifyDetails::SpotifyDetails, album_id::String; limi
     spotify_request(spotifyDetails, urlextention) # make request
 
 end # function get_album_tracks
+
+"""
+Get list of albums saved in user library: https://developer.spotify.com/documentation/web-api/reference/#/operations/get-users-saved-albums
+Required scope: user-library-read
+
+"""
+function get_saved_albums(spotifyDetails::SpotifyDetails; limit::Int=50, market::String="US", offset::Int=0)
+    urlextention = "me/albums?limit=$(limit)&offset=$(offset)&market=$(market)" # get saved albums extension 
+
+    spotify_request(spotifyDetails, urlextention) # make request
+
+end # function get_saved_albums
+
+"""
+Saves albums to user library: https://developer.spotify.com/documentation/web-api/reference/#/operations/save-albums-user
+Required scope: user-library-modify
+
+"""
+function save_albums(spotifyDetails::SpotifyDetails, album_ids::Vector{String})
+    album_idsString = join(album_ids, ",") # join the album ids with a comma
+
+    album_ids_uri = HTTP.escapeuri(album_idsString) # perform url encoding 
+
+    urlextention = "me/albums?ids=$(album_ids_uri)" # get saved albums extension
+
+    spotify_request(spotifyDetails, urlextention; method="PUT") # make request
+
+end # function save_album

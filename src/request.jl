@@ -11,6 +11,10 @@ function spotify_request(spotifyDetails::SpotifyDetails, urlextension::String; m
 
     response = HTTP.request(method, url, headers) # make request to API
 
-    responseParsed = JSON.parse(String(response.body)) # parse response
+    if length(response.body) > 0 # if response not empty
+        responseParsed = JSON.parse(String(response.body)) # parse response
+    else 
+        return nothing
+    end # if
 
 end # function spotify_request
