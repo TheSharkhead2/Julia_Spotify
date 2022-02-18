@@ -96,3 +96,20 @@ function delete_albums(spotifyDetails::SpotifyDetails, album_ids::Vector{String}
     spotify_request(spotifyDetails, urlextention; method="DELETE") # make request
 
 end # function delete_albums
+
+"""
+Checks to see if one or more albums are in the user's library:
+https://developer.spotify.com/documentation/web-api/reference/#/operations/check-users-saved-albums 
+Required scope: user-library-read
+
+"""
+function check_saved_albums(spotifyDetails::SpotifyDetails, album_ids::Vector{String})
+    album_idsString = join(album_ids, ",") # join the album ids with a comma
+
+    album_ids_uri = HTTP.escapeuri(album_idsString) # perform url encoding 
+
+    urlextention = "me/albums/contains?ids=$(album_ids_uri)" # get check saved albums extension
+
+    spotify_request(spotifyDetails, urlextention) # make request
+
+end # function check_saved_albums
