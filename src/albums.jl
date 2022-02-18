@@ -80,3 +80,19 @@ function save_albums(spotifyDetails::SpotifyDetails, album_ids::Vector{String})
     spotify_request(spotifyDetails, urlextention; method="PUT") # make request
 
 end # function save_album
+
+"""
+Removes albums from user library: https://developer.spotify.com/documentation/web-api/reference/#/operations/remove-albums-user
+Required scope: user-library-modify
+
+"""
+function delete_albums(spotifyDetails::SpotifyDetails, album_ids::Vector{String})
+    album_idsString = join(album_ids, ",") # join the album ids with a comma
+
+    album_ids_uri = HTTP.escapeuri(album_idsString) # perform url encoding 
+
+    urlextention = "me/albums?ids=$(album_ids_uri)" # get delete albums extension (same as to save, but for DELETE request)
+
+    spotify_request(spotifyDetails, urlextention; method="DELETE") # make request
+
+end # function delete_albums
