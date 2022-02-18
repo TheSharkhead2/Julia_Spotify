@@ -113,3 +113,16 @@ function check_saved_albums(spotifyDetails::SpotifyDetails, album_ids::Vector{St
     spotify_request(spotifyDetails, urlextention) # make request
 
 end # function check_saved_albums
+
+"""
+Gets the list of new release albums in the user's "Browse" tab: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-new-releases
+Required scope: ?
+
+"""
+function get_new_releases(spotifyDetails::SpotifyDetails; limit::Int=50, country::String="US", offset::Int=0)
+    urlextention = "browse/new-releases?limit=$(limit)&country=$(country)&offset=$(offset)" # get new releases extension
+
+    spotify_request(spotifyDetails, urlextention) # make request
+
+end # function get_new_releases

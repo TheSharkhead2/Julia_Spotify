@@ -24,3 +24,5 @@ spotifyDetails = pkce_authorization(ENV["CLIENT_ID"], redirect_uri, scope)
 # delete_albums(spotifyDetails, ["5OVxLrOoXXD2HSKkQNqhQW"])
 
 # println(check_saved_albums(spotifyDetails, ["5OVxLrOoXXD2HSKkQNqhQW"]))
+
+println(get_new_releases(spotifyDetails))
