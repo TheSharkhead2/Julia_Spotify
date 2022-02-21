@@ -19,4 +19,8 @@ include("albums.jl")
 
 export get_album, get_multiple_albums, get_album_tracks, get_saved_albums, save_albums, delete_albums, check_saved_albums, get_new_releases
 
+include("artists.jl")
+
+export get_artist, get_multiple_artists
+
 end # Spotify
