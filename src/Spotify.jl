@@ -23,4 +23,7 @@ include("artists.jl")
 
 export get_artist, get_multiple_artists, get_artist_albums, get_artist_top_tracks, get_artist_related_artists
 
+include("tracks.jl")
+export get_track, get_multiple_tracks, get_user_tracks
+
 end # Spotify
