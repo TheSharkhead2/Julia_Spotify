@@ -61,3 +61,15 @@ function get_artist_albums(spotifyDetails::SpotifyDetails, artist_id::String; in
     spotify_request(spotifyDetails, urlextension) # make request 
 
 end # function get_artist_albums
+
+"""
+Function to get top tracks for a given artist: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-artists-top-tracks
+
+"""
+function get_artist_top_tracks(spotifyDetails::SpotifyDetails, artist_id::String; market::String="US")
+    urlextension = "artists/$(artist_id)/top-tracks?market=$(market)" # get request extension 
+
+    spotify_request(spotifyDetails, urlextension) # make request 
+
+end # function get_artist_top_tracks
