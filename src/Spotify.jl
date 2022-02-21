@@ -21,6 +21,6 @@ export get_album, get_multiple_albums, get_album_tracks, get_saved_albums, save_
 
 include("artists.jl")
 
-export get_artist, get_multiple_artists, get_artist_albums, get_artist_top_tracks
+export get_artist, get_multiple_artists, get_artist_albums, get_artist_top_tracks, get_artist_related_artists
 
 end # Spotify

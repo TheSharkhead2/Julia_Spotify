@@ -73,3 +73,15 @@ function get_artist_top_tracks(spotifyDetails::SpotifyDetails, artist_id::String
     spotify_request(spotifyDetails, urlextension) # make request 
 
 end # function get_artist_top_tracks
+
+"""
+Gets related artists to specified artist:
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-artists-related-artists
+
+"""
+function get_artist_related_artists(spotifyDetails::SpotifyDetails, artist_id::String)
+    urlextension = "artists/$(artist_id)/related-artists" # get request extension 
+
+    spotify_request(spotifyDetails, urlextension) # make request 
+
+end # function get_artist_related_artists
