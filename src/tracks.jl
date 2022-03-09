@@ -38,3 +38,19 @@ function get_user_tracks(spotifyDetails::SpotifyDetails; limit::Int=50, offset::
     spotify_request(spotifyDetails, urlextension) # make request
     
 end # function get_user_tracks
+
+"""
+Gets audio features for multiple tracks: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-audio-features
+
+"""
+function audio_features(spotifyDetails::SpotifyDetails, track_ids::Vector{String})
+    track_idsString = join(track_ids, ",") # join vector into string
+
+    track_ids_uri = HTTP.escapeuri(track_idsString) # perform url encoding
+
+    urlextension = "audio-features?ids=$(track_ids_uri)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension) # make request
+    
+end # function audio_features
