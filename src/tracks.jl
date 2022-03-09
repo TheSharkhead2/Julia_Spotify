@@ -66,3 +66,15 @@ function audio_features(spotifyDetails::SpotifyDetails, track_id::String)
     spotify_request(spotifyDetails, urlextension) # make request
     
 end # function audio_features
+
+"""
+Gets audio analysis of a single track: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-audio-analysis
+
+"""
+function audio_analysis(spotifyDetails::SpotifyDetails, track_id::String)
+    urlextension = "audio-analysis/$(track_id)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension) # make request
+    
+end # function audio_analysis
