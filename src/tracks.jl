@@ -54,3 +54,15 @@ function audio_features(spotifyDetails::SpotifyDetails, track_ids::Vector{String
     spotify_request(spotifyDetails, urlextension) # make request
     
 end # function audio_features
+
+"""
+Gets audio features for a single track:
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-audio-features
+
+"""
+function audio_features(spotifyDetails::SpotifyDetails, track_id::String)
+    urlextension = "audio-features/$(track_id)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension) # make request
+    
+end # function audio_features
