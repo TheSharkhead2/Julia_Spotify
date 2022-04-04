@@ -16,4 +16,6 @@ spotifyDetails = pkce_authorization(ENV["CLIENT_ID"], redirect_uri, scope)
 # println(get_user_tracks(spotifyDetails))
 # println(audio_features(spotifyDetails, ["0v8iaQnFPT8qkicB880pAr"])) # multiple tracks 
 # println(audio_features(spotifyDetails, "0v8iaQnFPT8qkicB880pAr")) # single track
-println(audio_analysis(spotifyDetails, "0v8iaQnFPT8qkicB880pAr")) 
+# println(audio_analysis(spotifyDetails, "0v8iaQnFPT8qkicB880pAr")) 
+
+println(get_recommendations(spotifyDetails, ["6eUKZXaKkcviH0Ku9w2n3V"], ["pop"], ["0v8iaQnFPT8qkicB880pAr"]))
