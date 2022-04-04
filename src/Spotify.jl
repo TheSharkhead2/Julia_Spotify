@@ -24,9 +24,15 @@ include("artists.jl")
 export get_artist, get_multiple_artists, get_artist_albums, get_artist_top_tracks, get_artist_related_artists
 
 include("tracks.jl")
+
 export get_track, get_multiple_tracks, get_user_tracks, audio_features, audio_analysis, get_recommendations
 
 include("users.jl")
+
 export get_current_user_profile, get_user_top_tracks, get_user_top_artists, get_user_profile, follow_playlist, unfollow_playlist, get_followed_artists, follow_artists, follow_users, unfollow_artists, unfollow_users, check_artist_follow, check_user_follow, check_playlist_follow
+
+include("playlist.jl")
+
+export get_playlist
 
 end # Spotify
