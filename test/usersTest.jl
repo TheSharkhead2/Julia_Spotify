@@ -7,7 +7,7 @@ using DotEnv
 DotEnv.config()
 
 const redirect_uri = "http://localhost:8888/callback"
-const scope = "user-read-private user-read-email user-top-read playlist-modify-public user-follow-read user-follow-modify"
+const scope = "user-read-private user-read-email "
 
 spotifyDetails = pkce_authorization(ENV["CLIENT_ID"], redirect_uri, scope)
 
@@ -26,5 +26,7 @@ spotifyDetails = pkce_authorization(ENV["CLIENT_ID"], redirect_uri, scope)
 
 # follow_users(spotifyDetails, ["kcm4s9xdvua5ft5glrsxii3ki"])
 
-println(check_artist_follow(spotifyDetails, ["19c38YwdAreCJKVmQMPaWH", "6eUKZXaKkcviH0Ku9w2n3V"]))
-println(check_user_follow(spotifyDetails, ["kcm4s9xdvua5ft5glrsxii3ki", "v1nr5wbcx7kct1md9i5vkipv2"]))
+# println(check_artist_follow(spotifyDetails, ["19c38YwdAreCJKVmQMPaWH", "6eUKZXaKkcviH0Ku9w2n3V"]))
+# println(check_user_follow(spotifyDetails, ["kcm4s9xdvua5ft5glrsxii3ki", "v1nr5wbcx7kct1md9i5vkipv2"]))
+
+println(check_playlist_follow(spotifyDetails, "76KdKOh23Ofs73GtWZRlNQ", ["kcm4s9xdvua5ft5glrsxii3ki", "ommmrjvmegv5jpe6cjfc97392", "akster213"]))

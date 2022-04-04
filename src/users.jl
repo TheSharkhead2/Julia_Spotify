@@ -189,3 +189,21 @@ function check_user_follow(spotifyDetails::SpotifyDetails, ids::Vector{String})
     spotify_request(spotifyDetails, urlextension) # make request
 
 end # function check_user_follow
+
+"""
+Checks to see if specified users follow a playlist: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/check-if-user-follows-playlist
+Requires scope: playlist-read-private
+
+"""
+function check_playlist_follow(spotifyDetails::SpotifyDetails, playlist_id::String, ids::Vector{String})
+    idsString = join(ids, ",") # join the artist ids with a comma
+
+    ids_uri = HTTP.escapeuri(idsString) # perform url encoding
+
+
+    urlextension = "playlists/$(playlist_id)/followers/contains?ids=$(ids_uri)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension) # make request
+
+end # function check_playlist_follow
