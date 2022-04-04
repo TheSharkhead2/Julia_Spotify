@@ -24,4 +24,7 @@ spotifyDetails = pkce_authorization(ENV["CLIENT_ID"], redirect_uri, scope)
 # follow_artists(spotifyDetails, ["19c38YwdAreCJKVmQMPaWH"])
 # println(get_followed_artists(spotifyDetails))
 
-follow_users(spotifyDetails, ["kcm4s9xdvua5ft5glrsxii3ki"])
+# follow_users(spotifyDetails, ["kcm4s9xdvua5ft5glrsxii3ki"])
+
+println(check_artist_follow(spotifyDetails, ["19c38YwdAreCJKVmQMPaWH", "6eUKZXaKkcviH0Ku9w2n3V"]))
+println(check_user_follow(spotifyDetails, ["kcm4s9xdvua5ft5glrsxii3ki", "v1nr5wbcx7kct1md9i5vkipv2"]))

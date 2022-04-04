@@ -155,3 +155,37 @@ function unfollow_users(spotifyDetails::SpotifyDetails, ids::Vector{String})
     spotify_request(spotifyDetails, urlextension; method="DELETE") # make request
 
 end # function follow_users
+
+"""
+Checks to see if current user follows an artist. From combined method with users, however split for convienence: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/check-current-user-follows
+Requires scope: user-follow-read
+
+"""
+function check_artist_follow(spotifyDetails::SpotifyDetails, ids::Vector{String})
+    idsString = join(ids, ",") # join the artist ids with a comma
+
+    ids_uri = HTTP.escapeuri(idsString) # perform url encoding
+
+    urlextension = "me/following/contains?type=artist&ids=$(ids_uri)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension) # make request
+
+end # function check_artist_follow
+
+"""
+Checks to see if current user follows an user. From combined method with artists, however split for convienence:
+https://developer.spotify.com/documentation/web-api/reference/#/operations/check-current-user-follows
+Requires scope: user-follow-read
+
+"""
+function check_user_follow(spotifyDetails::SpotifyDetails, ids::Vector{String})
+    idsString = join(ids, ",") # join the artist ids with a comma
+
+    ids_uri = HTTP.escapeuri(idsString) # perform url encoding
+
+    urlextension = "me/following/contains?type=user&ids=$(ids_uri)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension) # make request
+
+end # function check_user_follow
