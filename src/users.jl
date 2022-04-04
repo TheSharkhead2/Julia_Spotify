@@ -61,3 +61,17 @@ function follow_playlist(spotifyDetails::SpotifyDetails, playlist_id::String)
     spotify_request(spotifyDetails, urlextension; method="PUT") # make request
 
 end # function follow_playlist
+
+"""
+Has current user unfollow a playlist: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/unfollow-playlist
+Requires scope: playlist-modify-public
+
+"""
+function unfollow_playlist(spotifyDetails::SpotifyDetails, playlist_id::String)
+    urlextension = "playlists/$(playlist_id)/followers" # get url extension
+
+    spotify_request(spotifyDetails, urlextension; method="DELETE") # make request
+
+end # function unfollow_playlist
+    
