@@ -33,6 +33,6 @@ export get_current_user_profile, get_user_top_tracks, get_user_top_artists, get_
 
 include("playlist.jl")
 
-export get_playlist
+export get_playlist, get_playlist_items
 
 end # Spotify
