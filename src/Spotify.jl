@@ -26,4 +26,7 @@ export get_artist, get_multiple_artists, get_artist_albums, get_artist_top_track
 include("tracks.jl")
 export get_track, get_multiple_tracks, get_user_tracks, audio_features, audio_analysis, get_recommendations
 
+include("users.jl")
+export get_user_profile
+
 end # Spotify
