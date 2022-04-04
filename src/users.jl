@@ -4,7 +4,7 @@ https://developer.spotify.com/documentation/web-api/reference/#/operations/get-c
 Requires scope: user-read-private user-read-email
 
 """
-function get_user_profile(spotifyDetails::SpotifyDetails)
+function get_current_user_profile(spotifyDetails::SpotifyDetails)
     urlextension = "me" # get url extension
 
     spotify_request(spotifyDetails, urlextension) # make request
@@ -36,3 +36,15 @@ function get_user_top_artists(spotifyDetails::SpotifyDetails; limit::Int=50, off
     spotify_request(spotifyDetails, urlextension) # make request
 
 end # function get_user_top_artists
+
+"""
+Get specific user's profile:
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-users-profile 
+
+"""
+function get_user_profile(spotifyDetails::SpotifyDetails, user_id::String)
+    urlextension = "users/$(user_id)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension) # make request
+
+end # function get_user_profile
