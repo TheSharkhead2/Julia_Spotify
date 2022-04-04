@@ -74,4 +74,16 @@ function unfollow_playlist(spotifyDetails::SpotifyDetails, playlist_id::String)
     spotify_request(spotifyDetails, urlextension; method="DELETE") # make request
 
 end # function unfollow_playlist
-    
+
+"""
+Get current user's followed artists: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-followed
+Requires scope: user-follow-read
+
+"""
+function get_followed_artists(spotifyDetails::SpotifyDetails)
+    urlextension = "me/following?type=artist" # get url extension
+
+    spotify_request(spotifyDetails, urlextension) # make request
+
+end # function get_follow_artists
