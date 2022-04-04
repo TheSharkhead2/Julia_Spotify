@@ -10,3 +10,29 @@ function get_user_profile(spotifyDetails::SpotifyDetails)
     spotify_request(spotifyDetails, urlextension) # make request
 
 end # function get_user_profile
+
+"""
+Get user's top tracks. From here, but specifying tracks:
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-users-top-artists-and-tracks
+Requires scope: user-top-read
+
+"""
+function get_user_top_tracks(spotifyDetails::SpotifyDetails; limit::Int=50, offset::Int=0, time_range::String="medium_term")
+    urlextension = "me/top/tracks?limit=$(limit)&offset=$(offset)&time_range=$(time_range)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension) # make request
+
+end # function get_user_top_tracks
+
+"""
+Get user's top artists. From here, but specifying artists: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-users-top-artists-and-tracks
+Requires scope: user-top-read
+
+"""
+function get_user_top_artists(spotifyDetails::SpotifyDetails; limit::Int=50, offset::Int=0, time_range::String="medium_term")
+    urlextension = "me/top/artists?limit=$(limit)&offset=$(offset)&time_range=$(time_range)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension) # make request
+
+end # function get_user_top_artists

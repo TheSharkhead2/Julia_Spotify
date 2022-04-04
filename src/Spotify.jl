@@ -27,6 +27,6 @@ include("tracks.jl")
 export get_track, get_multiple_tracks, get_user_tracks, audio_features, audio_analysis, get_recommendations
 
 include("users.jl")
-export get_user_profile
+export get_user_profile, get_user_top_tracks, get_user_top_artists
 
 end # Spotify
