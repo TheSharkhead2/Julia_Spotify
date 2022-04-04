@@ -87,3 +87,71 @@ function get_followed_artists(spotifyDetails::SpotifyDetails)
     spotify_request(spotifyDetails, urlextension) # make request
 
 end # function get_follow_artists
+
+"""
+Get current user to follow an artist. From here, but only using artist option: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/follow-artists-users
+Requires scope: user-follow-modify
+
+"""
+function follow_artists(spotifyDetails::SpotifyDetails, ids::Vector{String})
+    idsString = join(ids, ",") # join the artist ids with a comma
+
+    ids_uri = HTTP.escapeuri(idsString) # perform url encoding
+
+    urlextension = "me/following?type=artist&ids=$(ids_uri)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension; method="PUT") # make request
+
+end # function follow_artist
+
+"""
+Get current user to follow an user. From here, but only using user option:
+https://developer.spotify.com/documentation/web-api/reference/#/operations/follow-artists-users
+Requires scope: user-follow-modify
+
+"""
+function follow_users(spotifyDetails::SpotifyDetails, ids::Vector{String})
+    idsString = join(ids, ",") # join the artist ids with a comma
+
+    ids_uri = HTTP.escapeuri(idsString) # perform url encoding
+
+    urlextension = "me/following?type=user&ids=$(ids_uri)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension; method="PUT") # make request
+
+end # function follow_users
+
+"""
+Get current user to unfollow an artist. From here, but only using artist option: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/unfollow-artists-users
+Requires scope: user-follow-modify
+
+"""
+function unfollow_artists(spotifyDetails::SpotifyDetails, ids::Vector{String})
+    idsString = join(ids, ",") # join the artist ids with a comma
+
+    ids_uri = HTTP.escapeuri(idsString) # perform url encoding
+
+    urlextension = "me/following?type=artist&ids=$(ids_uri)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension; method="DELETE") # make request
+
+end # function follow_artist
+
+"""
+Get current user to unfollow an user. From here, but only using user option:
+https://developer.spotify.com/documentation/web-api/reference/#/operations/unfollow-artists-users
+Requires scope: user-follow-modify
+
+"""
+function unfollow_users(spotifyDetails::SpotifyDetails, ids::Vector{String})
+    idsString = join(ids, ",") # join the artist ids with a comma
+
+    ids_uri = HTTP.escapeuri(idsString) # perform url encoding
+
+    urlextension = "me/following?type=user&ids=$(ids_uri)" # get url extension
+
+    spotify_request(spotifyDetails, urlextension; method="DELETE") # make request
+
+end # function follow_users

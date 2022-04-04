@@ -7,7 +7,7 @@ using DotEnv
 DotEnv.config()
 
 const redirect_uri = "http://localhost:8888/callback"
-const scope = "user-read-private user-read-email user-top-read playlist-modify-public user-follow-read"
+const scope = "user-read-private user-read-email user-top-read playlist-modify-public user-follow-read user-follow-modify"
 
 spotifyDetails = pkce_authorization(ENV["CLIENT_ID"], redirect_uri, scope)
 
@@ -17,4 +17,11 @@ spotifyDetails = pkce_authorization(ENV["CLIENT_ID"], redirect_uri, scope)
 # println(get_user_profile(spotifyDetails, "kcm4s9xdvua5ft5glrsxii3ki"))
 # println(follow_playlist(spotifyDetails, "76KdKOh23Ofs73GtWZRlNQ"))
 # unfollow_playlist(spotifyDetails, "76KdKOh23Ofs73GtWZRlNQ")
-println(get_followed_artists(spotifyDetails))
+# println(get_followed_artists(spotifyDetails))
+
+# unfollow_artists(spotifyDetails, ["19c38YwdAreCJKVmQMPaWH"])
+# println(get_followed_artists(spotifyDetails))
+# follow_artists(spotifyDetails, ["19c38YwdAreCJKVmQMPaWH"])
+# println(get_followed_artists(spotifyDetails))
+
+follow_users(spotifyDetails, ["kcm4s9xdvua5ft5glrsxii3ki"])
