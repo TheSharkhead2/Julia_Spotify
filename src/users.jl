@@ -48,3 +48,16 @@ function get_user_profile(spotifyDetails::SpotifyDetails, user_id::String)
     spotify_request(spotifyDetails, urlextension) # make request
 
 end # function get_user_profile
+
+"""
+Get user to follow a playlist:
+https://developer.spotify.com/documentation/web-api/reference/#/operations/follow-playlist
+Requires scope: playlist-modify-public
+
+"""
+function follow_playlist(spotifyDetails::SpotifyDetails, playlist_id::String)
+    urlextension = "playlists/$(playlist_id)/followers" # get url extension
+
+    spotify_request(spotifyDetails, urlextension; method="PUT") # make request
+
+end # function follow_playlist
