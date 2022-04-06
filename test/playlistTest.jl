@@ -19,4 +19,6 @@ spotifyDetails = pkce_authorization(ENV["CLIENT_ID"], redirect_uri, scope)
 
 # println(get_current_user_playlists(spotifyDetails))
 
-println(get_user_playlists(spotifyDetails, "kcm4s9xdvua5ft5glrsxii3ki"))
+# println(get_user_playlists(spotifyDetails, "kcm4s9xdvua5ft5glrsxii3ki"))
+
+println(get_featured_playlists(spotifyDetails))

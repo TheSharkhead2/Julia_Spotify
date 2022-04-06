@@ -104,3 +104,27 @@ function get_user_playlists(spotifyDetails::SpotifyDetails, user_id::String; kwa
     spotify_request(spotifyDetails, url_extension) # make request
 
 end # function get_user_playlists
+
+function create_playlist(spotifyDetails::SpotifyDetails)
+    throw("Not Implemented Yet")
+end # function create_playlist
+
+"""
+Gets a list of featured playlists on Spotify homepage (for example):
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-featured-playlists
+
+"""
+function get_featured_playlists(spotifyDetails::SpotifyDetails; kwargs...)
+    validKwargs = [:country, :locale, :timestamp, :limit, :offset] # valid keyword arguments
+
+    urlextension = "browse/featured-playlists?" # get url extension
+
+    for arg in kwargs
+        if arg[1] ∈ validKwargs 
+            urlextension *= "$(arg[1])=$(arg[2])&"
+        end # if 
+    end # for
+
+    spotify_request(spotifyDetails, urlextension) # make request
+
+end # function get_featured_playlists
