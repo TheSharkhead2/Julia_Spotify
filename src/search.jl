@@ -10,5 +10,5 @@ function search(spotifyDetails::SpotifyDetails)
     # spotify_request(spotifyDetails, urlextension) # make request
 
 
-    throw("Unimplemented")
+    throw("Not Implemented Yet")
 end # function search
