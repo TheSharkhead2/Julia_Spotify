@@ -128,3 +128,23 @@ function get_featured_playlists(spotifyDetails::SpotifyDetails; kwargs...)
     spotify_request(spotifyDetails, urlextension) # make request
 
 end # function get_featured_playlists
+
+"""
+Returns playlists from a specified category: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-a-categories-playlists
+
+"""
+function get_category_playlists(spotifyDetails::SpotifyDetails, category_id::String; kwargs...)
+    validKwargs = [:country, :limit, :offset] # valid keyword arguments
+
+    urlextension = "browse/categories/$(category_id)/playlists?" # get url extension
+
+    for arg in kwargs
+        if arg[1] ∈ validKwargs 
+            urlextension *= "$(arg[1])=$(arg[2])&"
+        end # if 
+    end # for
+
+    spotify_request(spotifyDetails, urlextension) # make request
+
+end # function get_category_playlists
