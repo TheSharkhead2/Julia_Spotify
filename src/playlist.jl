@@ -83,3 +83,24 @@ function get_current_user_playlists(spotifyDetails::SpotifyDetails; kwargs...)
     spotify_request(spotifyDetails, url_extension) # make request
 
 end # function get_current_user_playlists
+
+"""
+Returns the playlists for a specified user: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-list-users-playlists
+Requires scope: playlist-read-private
+
+"""
+function get_user_playlists(spotifyDetails::SpotifyDetails, user_id::String; kwargs...)
+    validKwargs = [:limit, :offset] # valid keyword arguments
+
+    url_extension = "users/$(user_id)/playlists?" # get url extension
+
+    for arg in kwargs
+        if arg[1] ∈ validKwargs 
+            url_extension *= "$(arg[1])=$(arg[2])&"
+        end # if 
+    end # for
+
+    spotify_request(spotifyDetails, url_extension) # make request
+
+end # function get_user_playlists
