@@ -148,3 +148,15 @@ function get_category_playlists(spotifyDetails::SpotifyDetails, category_id::Str
     spotify_request(spotifyDetails, urlextension) # make request
 
 end # function get_category_playlists
+
+"""
+Gets the cover image for a specified playlist: 
+https://developer.spotify.com/documentation/web-api/reference/#/operations/get-playlist-cover
+
+"""
+function get_playlist_cover(spotifyDetails::SpotifyDetails, playlist_id::String)
+    urlextension = "playlists/$(playlist_id)/images" # get url extension
+
+    spotify_request(spotifyDetails, urlextension) # make request
+
+end # function get_playlist_cover
